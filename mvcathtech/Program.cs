@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 using mvcathtech.Models;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,21 @@ builder.Services.AddControllersWithViews();
 
 var optionsCon = builder.Configuration.GetConnectionString("MyConnection");
 builder.Services.AddDbContext<EshopDbContext>(options => options.UseSqlServer(optionsCon));
+
+var optionsBuilder = new DbContextOptionsBuilder<EshopDbContext>();
+optionsBuilder.UseSqlServer(optionsCon);
+using (var dbContext = new EshopDbContext(optionsBuilder.Options))
+{
+    dbContext.Database.Migrate();
+}
+
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddRazorPages()
+    .AddMicrosoftIdentityUI();
+
 
 
 var app = builder.Build();
@@ -30,5 +49,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.MapRazorPages();//ADD THIS LINE
 
 app.Run();

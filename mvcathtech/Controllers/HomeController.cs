@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using mvcathtech.Models;
 using System.Diagnostics;
@@ -15,8 +17,15 @@ namespace mvcathtech.Controllers
 
         public IActionResult Index()
         {
+
+
+
+
             return View();
         }
+
+
+
 
         public IActionResult Privacy()
         {
@@ -28,5 +37,10 @@ namespace mvcathtech.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+ 
+
+
     }
 }
